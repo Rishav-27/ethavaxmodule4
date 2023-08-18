@@ -26,46 +26,32 @@ contract DegenToken is ERC20, Ownable, ERC20Burnable {
             _burn(msg.sender,_amt);
         }
         function gaminghub() public pure returns(string memory) {
-            return "1.Diamond league  NFT=100\n 2.Crown League NFT=200 \n 3.Silver League NFT=300 \n 4.Bronze League NFT=400 \n";
+            return "1.ONE GAME WON  NFT=100\n 2.TWO GAME WON NFT=250 \n 3.THREE GAME WON NFT=500 \n 4.MORE THAN THREE GAMES WON NFT=1000 \n";
         }
-        function pointsLeague(uint _points)public pure returns(string memory){
-            require(_points>=100,"You are not in any league");
-            if(_points==100){
-                return "Congratulation you are in diamond league";
-            }
-            else if(_points ==200){
-                return "Congratulation you are in crown league";
-            }
-            else if(_points ==300){
-                return "Congratulation you are in silver league";
-            }
-            else if(_points ==400){
-                return "Congratulation you are in bronze league";
-            }
-        }
+      
 
-        function reedemTokens(uint choice) external payable{
-            require(choice>0,"Invalid selection");
-            if(choice ==1){
+        function reedemTokens(uint gameswon) external payable{
+            require(choice>0,"Wrong Input");
+            if(gameswon ==1){
                 approve(msg.sender, 100);
                 transferFrom(msg.sender, owner(), 100);
                 console.log("Congrats you have redeemed 100 tokens ");
             }
-            else if(choice ==2){
-                approve(msg.sender, 200);
-                transferFrom(msg.sender, owner(), 200);
-                 console.log("Congrats you have redeemed 200 tokens ");
+            else if(gameswon ==2){
+                approve(msg.sender, 250);
+                transferFrom(msg.sender, owner(), 250);
+                 console.log("Congrats you have redeemed 250 tokens ");
             }
-            else if(choice ==3){
-                approve(msg.sender, 300);
-                transferFrom(msg.sender, owner(), 300);
-                 console.log("Congrats you have redeemed 300 tokens ");
+            else if(gameswon ==3){
+                approve(msg.sender, 500);
+                transferFrom(msg.sender, owner(), 500);
+                 console.log("Congrats you have redeemed 500 tokens ");
             }
-            else if(choice ==4){
-                approve(msg.sender, 400);
-                transferFrom(msg.sender, owner(), 400);
-                 console.log("Congrats you have redeemed 400 tokens ");
-            }
+          else if(gameswon>3){
+                approve(msg.sender, 1000);
+                transferFrom(msg.sender, owner(), 1000);
+                 console.log("Congrats you have redeemed 1000 tokens ");
+            }
         }
 
 }
