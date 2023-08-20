@@ -10,48 +10,54 @@ contract DegenToken is ERC20, Ownable, ERC20Burnable {
 
     constructor() ERC20("Degen", "DGN") {}
 
-        function mint(address addressof, uint256 _amt) public onlyOwner{
-            _mint(addressof, _amt);
-        }
-        function transferTokens(address beneficiary, uint _amt) external{
-            require(balanceOf(msg.sender) >= _amt, "Invalid Owner !!");
-            approve(msg.sender,_amt);
-            transferFrom(msg.sender, beneficiary,_amt);
-        }
-        function balanceGetter() external view returns(uint){
-           return balanceOf(msg.sender);
-        }
-        function burnTokens(uint _amt) external{
-            require(balanceOf(msg.sender)>= _amt, "Insufficient Tokens Present");
-            _burn(msg.sender,_amt);
-        }
-        function gaminghub() public pure returns(string memory) {
-            return "1.ONE GAME WON  NFT=100\n 2.TWO GAME WON NFT=250 \n 3.THREE GAME WON NFT=500 \n 4.MORE THAN THREE GAMES WON NFT=1000 \n";
-        }
-      
+    function mint(address _add, uint256 _amt) public onlyOwner {
+         _mint  (_add , _amt);
+    }
 
-        function reedemTokens(uint gameswon) external payable{
-            require(choice>0,"Wrong Input");
-            if(gameswon ==1){
-                approve(msg.sender, 100);
-                transferFrom(msg.sender, owner(), 100);
-                console.log("Congrats you have redeemed 100 tokens ");
-            }
-            else if(gameswon ==2){
-                approve(msg.sender, 250);
-                transferFrom(msg.sender, owner(), 250);
-                 console.log("Congrats you have redeemed 250 tokens ");
-            }
-            else if(gameswon ==3){
-                approve(msg.sender, 500);
-                transferFrom(msg.sender, owner(), 500);
-                 console.log("Congrats you have redeemed 500 tokens ");
-            }
-          else if(gameswon>3){
-                approve(msg.sender, 1000);
-                transferFrom(msg.sender, owner(), 1000);
-                 console.log("Congrats you have redeemed 1000 tokens ");
-            }
-        }
+    function trans_Tks(address _acc, uint _amt) external {
+        require(balanceOf(msg.sender) >= _amt, "Insufficient balance");
+        _transfer(msg.sender, _acc, _amt);
+    }
+
+    function bal_get() external view returns (uint) {
+        return balanceOf(msg.sender);
+    }
+
+    function bal_Tks(uint _amt) external {
+        require(balanceOf(msg.sender) >= _amt, "Insufficient tokens");
+        _burn(msg.sender, _amt);
+    }
+
+    function Tks_game() public pure returns (string memory) {
+        return "1.ONE GAME WON Tokens=100\n2.TWO GAME WON Tokens=250\n3.THREE GAME WON Tokens=500\n4.FOUR GAMES WON Tokens=1000\n";
+    }
+
+    function redeemTokens(uint gameswon) external {
+    require(gameswon > 0 && gameswon <= 4, "Invalid input");
+
+    uint Tks_redem;
+
+    if (gameswon == 1) {
+        Tks_redem = 100;
+    } 
+    if (gameswon == 2) {
+        Tks_redem = 250;
+    } 
+    if (gameswon == 3) {
+        Tks_redem = 500;
+    } 
+    if (gameswon == 4) {
+        Tks_redem = 1000;
+    } 
+    else {
+        revert("Invalid input");
+    }
+
+    require(balanceOf(msg.sender) >= Tks_redem, "Insufficient tokens");
+
+    _transfer(msg.sender, owner(), Tks_redem);
+
+    console.log(Tks_redem, "tokens have been successfully transferred");
+}
 
 }
