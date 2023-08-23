@@ -4,60 +4,64 @@ pragma solidity ^0.8.18;
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
-import "hardhat/console.sol";
 
 contract DegenToken is ERC20, Ownable, ERC20Burnable {
-
     constructor() ERC20("Degen", "DGN") {}
 
-    function mint(address _add, uint256 _amt) public onlyOwner {
-         _mint  (_add , _amt);
+    function mint(address _account, uint256 _amount) public onlyOwner {
+        _mint(_account, _amount);
     }
 
-    function trans_Tks(address _acc, uint _amt) external {
-        require(balanceOf(msg.sender) >= _amt, "Insufficient balance");
-        _transfer(msg.sender, _acc, _amt);
+    function transferTokens(address _to, uint256 _amount) external {
+        require(balanceOf(msg.sender) >= _amount, "Insufficient balance");
+        _transfer(msg.sender, _to, _amount);
     }
 
-    function bal_get() external view returns (uint) {
+    function getTokenBalance() external view returns (uint256) {
         return balanceOf(msg.sender);
     }
 
-    function bal_Tks(uint _amt) external {
-        require(balanceOf(msg.sender) >= _amt, "Insufficient tokens");
-        _burn(msg.sender, _amt);
+    function burnTokens(uint256 _amount) external {
+        require(balanceOf(msg.sender) >= _amount, "Insufficient tokens");
+        _burn(msg.sender, _amount);
     }
 
-    function Tks_game() public pure returns (string memory) {
-        return "1.ONE GAME WON Tokens=100\n2.TWO GAME WON Tokens=250\n3.THREE GAME WON Tokens=500\n4.FOUR GAMES WON Tokens=1000\n";
+    function distributeTokens(uint256 _gamesWon) external {
+        require(_gamesWon >= 1 && _gamesWon <= 4, "Invalid number of games won");
+
+        uint256 tokensToDistribute = 0;
+
+        if (_gamesWon == 1) {
+            tokensToDistribute = 100;
+        } else if (_gamesWon == 2) {
+            tokensToDistribute = 250;
+        } else if (_gamesWon == 3) {
+            tokensToDistribute = 500;
+        } else if (_gamesWon == 4) {
+            tokensToDistribute = 1000;
+        }
+
+        require(tokensToDistribute > 0, "Invalid number of tokens to distribute");
+        require(balanceOf(owner()) >= tokensToDistribute, "Insufficient contract balance");
+
+        _transfer(owner(), msg.sender, tokensToDistribute);
     }
 
-    function redeemTokens(uint gameswon) external {
-    require(gameswon > 0 && gameswon <= 4, "Invalid input");
+    function getDistributionDetails(uint256 _gamesWon) external pure returns (string memory) {
+        require(_gamesWon >= 1 && _gamesWon <= 4, "Invalid number of games won");
 
-    uint Tks_redem;
+        string memory distributionDetails;
 
-    if (gameswon == 1) {
-        Tks_redem = 100;
-    } 
-    if (gameswon == 2) {
-        Tks_redem = 250;
-    } 
-    if (gameswon == 3) {
-        Tks_redem = 500;
-    } 
-    if (gameswon == 4) {
-        Tks_redem = 1000;
-    } 
-    else {
-        revert("Invalid input");
+        if (_gamesWon == 1) {
+            distributionDetails = "1 game won: 100 tokens";
+        } else if (_gamesWon == 2) {
+            distributionDetails = "2 games won: 250 tokens";
+        } else if (_gamesWon == 3) {
+            distributionDetails = "3 games won: 500 tokens";
+        } else if (_gamesWon == 4) {
+            distributionDetails = "4 games won: 1000 tokens";
+        }
+
+        return distributionDetails;
     }
-
-    require(balanceOf(msg.sender) >= Tks_redem, "Insufficient tokens");
-
-    _transfer(msg.sender, owner(), Tks_redem);
-
-    console.log(Tks_redem, "tokens have been successfully transferred");
-}
-
 }
